@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">OlxClone</string>
+    <string name="Email">Email</string>
+    <string name="Password">Password</string>
+    <string name="Login">Login</string>
+    <string name="NoAccount">No account yet? Create one</string>
+    <string name="Logo">OCS Company Logo</string>
+    <string name="Name">Name</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_member">Already a member? Login</string>
+    <string name="btn_forgot_password">Forgot your password?</string>
+    <string name="lbl_forgot_password">Forgot password?</string>
+    <string name="btn_back"><![CDATA[<< Back]]></string>
+    <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
+
+    <string name="btn_reset_password">Reset Password</string>
+
+    <string name="home">Home</string>
+    <string name="browse_ads">Browse Ads</string>
+    <string name="my_ads">My Ads</string>
+    <string name="favorites">Favorites</string>
+    <string name="sell_your_item">Sell your item</string>
+    <string name="signout">Sign Out</string>
+
+    <string name="welcome">Welcome!</string>
+    <string name="signoutconfirmation">Are you sure to sign out?</string>
+
+    <string name="nav_open_drawer">Open navigation drawer</string>
+    <string name="nav_close_drawer">Close navigation drawer</string>
+</resources>

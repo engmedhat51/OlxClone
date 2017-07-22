@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home_fragment"
+            android:icon="@drawable/ic_one"
+            android:title="@string/home"
+            android:checked="true"
+            />
+        <item
+            android:id="@+id/nav_browse_ads_fragment"
+            android:icon="@drawable/ic_two"
+            android:title="@string/browse_ads" />
+
+        <item
+            android:id="@+id/nav_favorites_fragment"
+
+            android:title="@string/favorites" />
+
+        <item
+            android:id="@+id/nav_sell_your_item_fragment"
+
+            android:title="@string/sell_your_item" />
+
+    </group>
+
+    <item android:title="@string/signout">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/signout"
+                    android:icon="@drawable/logout"
+                    android:title="@string/signout" />
+
+            </group>
+        </menu>
+    </item>
+</menu>
