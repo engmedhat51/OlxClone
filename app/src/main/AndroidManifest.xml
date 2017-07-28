@@ -4,41 +4,62 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.Dark"
-                  android:windowSoftInputMode="stateHidden">
-
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark"
+            android:windowSoftInputMode="stateHidden">
         </activity>
-        <activity android:name=".NavigationActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.Dark">
+        <activity
+            android:name=".NavigationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark">
         </activity>
-        <activity android:name=".SignupActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.Dark">
+        <activity
+            android:name=".SignupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark">
         </activity>
-        <activity android:name=".ResetPasswordActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme.Dark">
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dark">
         </activity>
-
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".SellYourItemActivity"
 
+                  android:parentActivityName=".NavigationActivity"
+            >
+        </activity>
+        <activity android:name="net.medhatblog.olxclone.imagelib.activities.GalleryActivity"
+                  android:theme="@style/MultimagerTheme.NoActionBar"
+
+
+                  android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

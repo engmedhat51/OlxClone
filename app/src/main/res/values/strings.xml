@@ -27,4 +27,11 @@
 
     <string name="nav_open_drawer">Open navigation drawer</string>
     <string name="nav_close_drawer">Close navigation drawer</string>
+
+    <string name="photo">Take or choose 8 photos</string>
+    <string name="photo_added">Added %1$d of 8 photos</string>
+    <string name="attach_images_title">Please choose photos</string>
+    <string name="select_images">Select Images</string>
+    <string name="selected"> selected</string>
+    <item name="image_id" type="id"/>
 </resources>

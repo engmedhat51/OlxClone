@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
+    >
+
+
+    <TextView
+        android:id="@+id/photo_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/photo"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        />
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="104dp">
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/add_photo"
+                android:layout_gravity="center_vertical"
+
+                android:src="@drawable/ic_photo_camera_black_48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <ImageView
+                android:id="@+id/image1"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+
+                android:visibility="gone"
+                />
+            <ImageView
+                android:id="@+id/image2"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+
+                android:visibility="gone"
+                />
+            <ImageView
+                android:id="@+id/image3"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+
+                android:visibility="gone"
+                />
+            <ImageView
+                android:id="@+id/image4"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/image5"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/image6"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:visibility="gone"
+                />
+            <ImageView
+                android:id="@+id/image7"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:visibility="gone"
+                />
+            <ImageView
+                android:id="@+id/image8"
+
+                android:layout_marginLeft="4dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:visibility="gone"
+                />
+
+
+
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
+</LinearLayout>

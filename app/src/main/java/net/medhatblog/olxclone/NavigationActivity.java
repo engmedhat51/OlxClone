@@ -11,9 +11,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class NavigationActivity extends AppCompatActivity {
+
+    private GoogleApiClient mGoogleApiClient;
 
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -24,6 +28,11 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
 
+        // connect to google api
+        mGoogleApiClient = new GoogleApiClient.Builder(this).
+                addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+        mGoogleApiClient.connect();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,11 +70,15 @@ public class NavigationActivity extends AppCompatActivity {
         switch(menuItem.getItemId()) {
 
 
+            case R.id.nav_sell_your_item_fragment:
+
+                startActivity(new Intent(NavigationActivity.this, SellYourItemActivity.class));
+                break;
             case R.id.signout:
 
-
-                                FirebaseAuth.getInstance().signOut();
-                                finish();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                FirebaseAuth.getInstance().signOut();
+                finish();
 
 
 
