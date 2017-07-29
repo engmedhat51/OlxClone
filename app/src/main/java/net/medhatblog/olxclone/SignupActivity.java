@@ -44,6 +44,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+
         //   set Already member TextView click behavior
         loginScreen.setOnClickListener(new View.OnClickListener() {
             @Override

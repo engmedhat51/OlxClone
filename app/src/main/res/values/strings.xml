@@ -34,4 +34,15 @@
     <string name="select_images">Select Images</string>
     <string name="selected"> selected</string>
     <item name="image_id" type="id"/>
+
+    <string name="title">Title</string>
+
+    <string name="price">Price (EGP)</string>
+
+    <string name="description">Description</string>
+
+    <string name="mobile">Phone</string>
+
+    <string name="submit">Submit</string>
+
 </resources>

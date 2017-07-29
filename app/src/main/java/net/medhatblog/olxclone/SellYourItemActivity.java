@@ -1,16 +1,35 @@
 package net.medhatblog.olxclone;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import java.util.ArrayList;
+
+import java.util.UUID;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import net.medhatblog.olxclone.imagelib.activities.GalleryActivity;
@@ -28,11 +47,56 @@ public class SellYourItemActivity extends AppCompatActivity {
     private ArrayList<Image> imagesList;
     private ArrayList<Long> selectedIdsBackup;
     private TextView photoText;
+
+    private EditText title;
+    private EditText price;
+    private EditText description;
+    private EditText name;
+    private EditText input_email;
+    private EditText mobile_number;
+    private AppCompatButton submit;
+
+    private String uid;
+
+    private StorageReference storageReference;
+    private DatabaseReference databaseReference;
+    private FirebaseUser user;
+
+    private UUID adId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell_your_item);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        title = (EditText) findViewById(R.id.title);
+        price = (EditText) findViewById(R.id.price);
+        description = (EditText) findViewById(R.id.description);
+        name = (EditText) findViewById(R.id.name);
+        input_email = (EditText) findViewById(R.id.input_email);
+        mobile_number = (EditText) findViewById(R.id.mobile_number);
+        submit = (AppCompatButton) findViewById(R.id.submit);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitToFirebase();
+            }
+        });
+        if (user != null) {
+
+            String userName = user.getDisplayName();
+            String userEmail = user.getEmail();
+
+            uid = user.getUid();
+            name.setText(userName);
+            input_email.setText(userEmail);
+
+
+        }
         layout = (LinearLayout)findViewById(R.id.layout);
         imageView = (ImageView) findViewById(R.id.image1);
         selectedColor = fetchAccentColor();
@@ -134,5 +198,157 @@ public class SellYourItemActivity extends AppCompatActivity {
         }
     }
 
+    public boolean validate() {
+        boolean valid = true;
 
+        String email = input_email.getText().toString();
+        String mobileN= mobile_number.getText().toString();
+        String titleS = title.getText().toString();
+        String descriptionS = description.getText().toString();
+        String nameS = name.getText().toString();
+        String priceS = price.getText().toString();
+
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            input_email.setError("enter a valid email address");
+            valid = false;
+        } else {
+            input_email.setError(null);
+        }
+
+        if (mobileN.isEmpty() || mobileN.length() !=11) {
+            mobile_number.setError("Please enter valid number");
+            valid = false;
+        } else {
+            mobile_number.setError(null);
+        }
+
+
+        if(titleS.isEmpty()||titleS.length()<5) {
+
+            title.setError("Please enter title not less than 5 letters");
+            valid = false;
+        } else {
+            title.setError(null);
+
+        }
+
+        if(descriptionS.isEmpty()||descriptionS.length()<10) {
+
+            description.setError("Please enter description not less than 10 letters");
+            valid = false;
+        } else {
+            description.setError(null);
+
+        }
+
+        if(nameS.isEmpty()) {
+
+            name.setError("Please enter your name");
+            valid = false;
+        } else {
+            name.setError(null);
+
+        }
+
+        if(priceS.isEmpty()) {
+
+            price.setError("Please enter price");
+            valid = false;
+        } else {
+            price.setError(null);
+
+        }
+
+
+        return valid;
+    }
+
+    public void submitToFirebase(){
+        if(!validate()){
+
+            Toast.makeText(getApplicationContext(),"Please check the inputs again",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+        adId=UUID.randomUUID();
+        if (imagesList!=null && !imagesList.isEmpty()){
+
+
+
+
+
+
+
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+
+            progressDialog.setTitle("Uploading images");
+
+
+            for (int i=0;i<imagesList.size();i++) {
+
+                progressDialog.show();
+
+
+
+                UUID imageId = UUID.randomUUID();
+              final  StorageReference storageReference2nd = storageReference.child("image"+ imageId);
+
+                storageReference2nd.putFile(imagesList.get(i).uri).
+                        addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                                 @Override
+                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                     @SuppressWarnings("VisibleForTests")
+                                                      String downloadUrl = taskSnapshot.getDownloadUrl().toString();
+
+                                                     databaseReference.child(uid).child(String.valueOf(adId)).child("images").push().setValue(downloadUrl);
+
+
+                                                     progressDialog.dismiss();
+
+                                                 }
+                                             }
+                        ).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        //if the upload is not successfull
+                        //hiding the progress dialog
+                        progressDialog.dismiss();
+
+                        //and displaying error message
+                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+
+
+
+
+
+
+
+
+        }
+        AdUploadInfo adUploadInfo = new AdUploadInfo(title.getText().toString()
+                ,price.getText().toString()
+                ,description.getText().toString()
+                ,name.getText().toString()
+                ,input_email.getText().toString()
+                ,mobile_number.getText().toString()
+        );
+        databaseReference.child(uid).child(String.valueOf(adId)).child("data").setValue(adUploadInfo);
+
+        databaseReference.child(uid).child(String.valueOf(adId)).child("images");
+
+        Toast.makeText(getApplicationContext(),"Ad submitted successfully",Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this,NavigationActivity.class));
+
+    }
+    public void success(){
+
+
+    }
 }
