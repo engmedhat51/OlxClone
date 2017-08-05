@@ -1,10 +1,11 @@
 package net.medhatblog.olxclone;
 
+import java.io.Serializable;
 /**
  * Created by PC on 7/29/2017.
  */
 
-public class AdUploadInfo {
+public class AdUploadInfo implements Serializable{
 
     public String adTitle;
     public String adPrice;
@@ -13,9 +14,15 @@ public class AdUploadInfo {
     public String adEmail;
     public String adPhone;
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-
+    private String imageUrl;
 
     public AdUploadInfo() {
 

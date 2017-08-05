@@ -10,9 +10,9 @@
             android:checked="true"
             />
         <item
-            android:id="@+id/nav_browse_ads_fragment"
+            android:id="@+id/nav_my_ads_fragment"
             android:icon="@drawable/ic_two"
-            android:title="@string/browse_ads" />
+            android:title="@string/my_ads" />
 
         <item
             android:id="@+id/nav_favorites_fragment"

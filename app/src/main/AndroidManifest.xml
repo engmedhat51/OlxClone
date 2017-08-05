@@ -50,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SellYourItemActivity"
-
+                    android:label="@string/sell_your_item"
                   android:parentActivityName=".NavigationActivity"
             >
         </activity>
@@ -60,6 +60,7 @@
 
                   android:screenOrientation="portrait"
             ></activity>
+
     </application>
 
 </manifest>

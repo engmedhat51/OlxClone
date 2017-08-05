@@ -3,6 +3,8 @@ package net.medhatblog.olxclone;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +16,12 @@ import android.view.MenuItem;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -23,10 +31,13 @@ public class NavigationActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle toggle;
+    private DatabaseReference databaseReference;
+    private FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         // connect to google api
         mGoogleApiClient = new GoogleApiClient.Builder(this).
@@ -50,6 +61,8 @@ public class NavigationActivity extends AppCompatActivity {
                 R.string.nav_close_drawer);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
+//        MenuItem menuIem= nvDrawer.getMenu().getItem(0);
+//        selectDrawerItem(menuIem);
 
 
     }
@@ -67,9 +80,70 @@ public class NavigationActivity extends AppCompatActivity {
 
     public void selectDrawerItem(MenuItem menuItem) {
 
+        FragmentManager fm;
+        Fragment fragment;
         switch(menuItem.getItemId()) {
 
+            case R.id.nav_my_ads_fragment:
 
+                databaseReference = FirebaseDatabase.getInstance().getReference();
+
+
+               databaseReference.addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(DataSnapshot dataSnapshot) {
+
+                           if ((dataSnapshot.hasChild(user.getUid()))&&(nvDrawer.getMenu().findItem(R.id.nav_my_ads_fragment).isChecked()))
+                           {
+                               Fragment fragment2 = new MyAdsFragment();
+
+                               FragmentManager fm2 = getSupportFragmentManager();
+
+
+                               fm2.beginTransaction()
+                                       .replace(R.id.flContent, fragment2)
+                                       .commit();
+
+                           } else if (nvDrawer.getMenu().findItem(R.id.nav_my_ads_fragment).isChecked())
+                           {
+
+
+                               Fragment fragment3 = new NoAdFragment();
+
+                               FragmentManager fm3 = getSupportFragmentManager();
+
+                               fm3.beginTransaction()
+                                       .replace(R.id.flContent, fragment3)
+                                       .commit();
+                           }
+
+
+                   }
+
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
+
+                   }
+               });
+
+
+
+                break;
+
+            case R.id.nav_home_fragment:
+
+
+                 fragment = new DisplayImagesFragment();
+
+                 fm=getSupportFragmentManager();
+
+                fm.beginTransaction()
+                        .replace(R.id.flContent, fragment)
+                        .commit();
+
+                break;
+            case R.id.nav_favorites_fragment:
+                break;
             case R.id.nav_sell_your_item_fragment:
 
                 startActivity(new Intent(NavigationActivity.this, SellYourItemActivity.class));

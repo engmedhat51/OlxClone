@@ -16,7 +16,7 @@
     <string name="btn_reset_password">Reset Password</string>
 
     <string name="home">Home</string>
-    <string name="browse_ads">Browse Ads</string>
+    <string name="my">My Ads</string>
     <string name="my_ads">My Ads</string>
     <string name="favorites">Favorites</string>
     <string name="sell_your_item">Sell your item</string>
@@ -44,5 +44,8 @@
     <string name="mobile">Phone</string>
 
     <string name="submit">Submit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="noads">Ads list is empty</string>
 
 </resources>
