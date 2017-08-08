@@ -38,7 +38,7 @@ public class MyAdsFragment extends Fragment {
 
 
     // Creating List of ImageUploadInfo class.
-    List<AdUploadInfo> list = new ArrayList<>();
+    List<AdUploadInfo>list = new ArrayList<>();
     ProgressDialog progressDialog;
     private FirebaseUser user;
 
@@ -75,7 +75,6 @@ public class MyAdsFragment extends Fragment {
         // Showing progress dialog.
         progressDialog.show();
 
-
         databaseReference = FirebaseDatabase.getInstance().getReference(user.getUid());
 
 
@@ -92,7 +91,8 @@ public class MyAdsFragment extends Fragment {
                         for(DataSnapshot child3:child2.child("images").getChildren()) {
 
                             adUploadInfo.setImageUrl(child3.getValue().toString());
-
+                            adUploadInfo.setUserId(user.getUid());
+                            adUploadInfo.setAdId(child2.getKey());
 
                             list.add(adUploadInfo);
 

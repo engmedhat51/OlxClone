@@ -23,6 +23,24 @@ public class AdUploadInfo implements Serializable{
     }
 
     private String imageUrl;
+    private String userId;
+    private String AdId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getAdId() {
+        return AdId;
+    }
+
+    public void setAdId(String adId) {
+        AdId = adId;
+    }
 
     public AdUploadInfo() {
 

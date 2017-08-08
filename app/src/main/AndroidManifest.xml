@@ -4,15 +4,16 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature
         android:name="android.hardware.camera.flash"
-        android:required="false" />
+        android:required="false"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -49,18 +50,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SellYourItemActivity"
-                    android:label="@string/sell_your_item"
-                  android:parentActivityName=".NavigationActivity"
-            >
+        <activity
+            android:name=".SellYourItemActivity"
+            android:label="@string/sell_your_item"
+            android:parentActivityName=".NavigationActivity">
         </activity>
-        <activity android:name="net.medhatblog.olxclone.imagelib.activities.GalleryActivity"
-                  android:theme="@style/MultimagerTheme.NoActionBar"
-
-
-                  android:screenOrientation="portrait"
-            ></activity>
-
+        <activity
+            android:name=".imagelib.activities.GalleryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MultimagerTheme.NoActionBar"/>
+        <activity android:name=".ViewAdDetails"
+                  android:theme="@style/AppTheme.Dark">
+        </activity>
     </application>
 
 </manifest>

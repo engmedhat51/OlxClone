@@ -33,6 +33,8 @@ public class NavigationActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private DatabaseReference databaseReference;
     private FirebaseUser user;
+    private boolean mIsResumed = false;
+    private int selectedposition= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,6 @@ public class NavigationActivity extends AppCompatActivity {
 //        MenuItem menuIem= nvDrawer.getMenu().getItem(0);
 //        selectDrawerItem(menuIem);
 
-
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -84,7 +85,21 @@ public class NavigationActivity extends AppCompatActivity {
         Fragment fragment;
         switch(menuItem.getItemId()) {
 
+            case R.id.nav_home_fragment:
+
+                selectedposition= 0;
+
+                fragment = new DisplayImagesFragment();
+
+                fm = getSupportFragmentManager();
+
+                fm.beginTransaction()
+                        .replace(R.id.flContent, fragment)
+                        .commit();
+
+                break;
             case R.id.nav_my_ads_fragment:
+                selectedposition= 1;
 
                 databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -93,7 +108,7 @@ public class NavigationActivity extends AppCompatActivity {
                    @Override
                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                           if ((dataSnapshot.hasChild(user.getUid()))&&(nvDrawer.getMenu().findItem(R.id.nav_my_ads_fragment).isChecked()))
+                           if ((dataSnapshot.hasChild(user.getUid()))&&(mIsResumed))
                            {
                                Fragment fragment2 = new MyAdsFragment();
 
@@ -104,9 +119,8 @@ public class NavigationActivity extends AppCompatActivity {
                                        .replace(R.id.flContent, fragment2)
                                        .commit();
 
-                           } else if (nvDrawer.getMenu().findItem(R.id.nav_my_ads_fragment).isChecked())
+                           } else if (mIsResumed)
                            {
-
 
                                Fragment fragment3 = new NoAdFragment();
 
@@ -130,19 +144,9 @@ public class NavigationActivity extends AppCompatActivity {
 
                 break;
 
-            case R.id.nav_home_fragment:
 
-
-                 fragment = new DisplayImagesFragment();
-
-                 fm=getSupportFragmentManager();
-
-                fm.beginTransaction()
-                        .replace(R.id.flContent, fragment)
-                        .commit();
-
-                break;
             case R.id.nav_favorites_fragment:
+                selectedposition= 2;
                 break;
             case R.id.nav_sell_your_item_fragment:
 
@@ -192,5 +196,17 @@ public class NavigationActivity extends AppCompatActivity {
 
         finish();
     }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        mIsResumed = true;
+            MenuItem menuIem = nvDrawer.getMenu().getItem(selectedposition);
+            selectDrawerItem(menuIem);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsResumed = false;
     }
 }

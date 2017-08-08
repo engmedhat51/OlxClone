@@ -36,7 +36,7 @@ public class DisplayImagesFragment extends Fragment {
     // Creating List of ImageUploadInfo class.
     List<AdUploadInfo> list = new ArrayList<>();
     ProgressDialog progressDialog;
-
+    ValueEventListener listener;
     private FirebaseUser user;
     public DisplayImagesFragment() {
     }
@@ -73,7 +73,7 @@ public class DisplayImagesFragment extends Fragment {
 
 
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
+         listener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
 
@@ -92,7 +92,8 @@ public class DisplayImagesFragment extends Fragment {
                             for(DataSnapshot child3:child2.child("images").getChildren()) {
 
                                 adUploadInfo.setImageUrl(child3.getValue().toString());
-
+                                adUploadInfo.setUserId(postSnapshot.getKey());
+                                adUploadInfo.setAdId(child2.getKey());
                                 list.add(adUploadInfo);
 
                                 break;
@@ -117,9 +118,8 @@ public class DisplayImagesFragment extends Fragment {
                     progressDialog.dismiss();
 
                 }
-            });
-
-
+            };
+        databaseReference.addValueEventListener(listener);
 
            return view;    }
 }
