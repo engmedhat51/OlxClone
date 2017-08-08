@@ -62,7 +62,7 @@ public class DisplayImagesFragment extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
 
         // Setting up message in Progress dialog.
-        progressDialog.setMessage("Loading Images From Firebase.");
+        progressDialog.setMessage("Loading ADs From Server.");
 
         // Showing progress dialog.
         progressDialog.show();
@@ -76,40 +76,39 @@ public class DisplayImagesFragment extends Fragment {
          listener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-
-
-                        if  (postSnapshot.getKey().equals(user.getUid())){
-                            continue;
-                        }
-                        for(DataSnapshot child2:postSnapshot.getChildren()){
-
-                            AdUploadInfo adUploadInfo= child2.getValue(AdUploadInfo.class);
+                    if (user != null) {
+                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
 
 
+                            if (postSnapshot.getKey().equals(user.getUid())) {
+                                continue;
+                            }
+                            for (DataSnapshot child2 : postSnapshot.getChildren()) {
 
-                            for(DataSnapshot child3:child2.child("images").getChildren()) {
+                                AdUploadInfo adUploadInfo = child2.getValue(AdUploadInfo.class);
 
-                                adUploadInfo.setImageUrl(child3.getValue().toString());
-                                adUploadInfo.setUserId(postSnapshot.getKey());
-                                adUploadInfo.setAdId(child2.getKey());
-                                list.add(adUploadInfo);
 
-                                break;
+                                for (DataSnapshot child3 : child2.child("images").getChildren()) {
+
+                                    adUploadInfo.setImageUrl(child3.getValue().toString());
+                                    adUploadInfo.setUserId(postSnapshot.getKey());
+                                    adUploadInfo.setAdId(child2.getKey());
+                                    list.add(adUploadInfo);
+
+                                    break;
+                                }
+
                             }
 
                         }
 
+                        adapter = new RecyclerViewAdapter(getActivity(), list);
+
+                        recyclerView.setAdapter(adapter);
+                        progressDialog.dismiss();
                     }
 
-                    adapter = new RecyclerViewAdapter(getActivity(), list);
-
-                    recyclerView.setAdapter(adapter);
-                    progressDialog.dismiss();
                 }
-
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
@@ -122,4 +121,12 @@ public class DisplayImagesFragment extends Fragment {
         databaseReference.addValueEventListener(listener);
 
            return view;    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (listener!=null){
+            databaseReference.removeEventListener(listener);
+        }
+    }
 }

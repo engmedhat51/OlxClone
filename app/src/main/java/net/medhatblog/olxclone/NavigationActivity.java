@@ -2,6 +2,7 @@ package net.medhatblog.olxclone;
 
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,12 +37,23 @@ public class NavigationActivity extends AppCompatActivity {
     private FirebaseUser user;
     private boolean mIsResumed = false;
     private int selectedposition= 0;
+    private static final int REQUEST_CODE_AD = 0;
+    ValueEventListener valueEventListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                 user = firebaseAuth.getCurrentUser();
+
+            }
+        };
+        firebaseAuth.addAuthStateListener(mAuthListener);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         // connect to google api
         mGoogleApiClient = new GoogleApiClient.Builder(this).
                 addApi(Auth.GOOGLE_SIGN_IN_API)
@@ -101,46 +114,45 @@ public class NavigationActivity extends AppCompatActivity {
             case R.id.nav_my_ads_fragment:
                 selectedposition= 1;
 
-                databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
-               databaseReference.addValueEventListener(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(DataSnapshot dataSnapshot) {
+                if (user!=null) {
+                     valueEventListener=new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                           if ((dataSnapshot.hasChild(user.getUid()))&&(mIsResumed))
-                           {
-                               Fragment fragment2 = new MyAdsFragment();
+                            if ((dataSnapshot.hasChild(user.getUid())) && (mIsResumed)) {
+                                Fragment fragment2 = new MyAdsFragment();
 
-                               FragmentManager fm2 = getSupportFragmentManager();
-
-
-                               fm2.beginTransaction()
-                                       .replace(R.id.flContent, fragment2)
-                                       .commit();
-
-                           } else if (mIsResumed)
-                           {
-
-                               Fragment fragment3 = new NoAdFragment();
-
-                               FragmentManager fm3 = getSupportFragmentManager();
-
-                               fm3.beginTransaction()
-                                       .replace(R.id.flContent, fragment3)
-                                       .commit();
-                           }
+                                FragmentManager fm2 = getSupportFragmentManager();
 
 
-                   }
+                                fm2.beginTransaction()
+                                        .replace(R.id.flContent, fragment2)
+                                        .commit();
 
-                   @Override
-                   public void onCancelled(DatabaseError databaseError) {
+                            } else if (mIsResumed) {
 
-                   }
-               });
+                                Fragment fragment3 = new NoAdFragment();
+
+                                FragmentManager fm3 = getSupportFragmentManager();
+
+                                fm3.beginTransaction()
+                                        .replace(R.id.flContent, fragment3)
+                                        .commit();
+                            }
 
 
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    };
+                    databaseReference.addValueEventListener(valueEventListener);
+
+                }
 
                 break;
 
@@ -150,7 +162,7 @@ public class NavigationActivity extends AppCompatActivity {
                 break;
             case R.id.nav_sell_your_item_fragment:
 
-                startActivity(new Intent(NavigationActivity.this, SellYourItemActivity.class));
+                startActivityForResult(new Intent(NavigationActivity.this, SellYourItemActivity.class),REQUEST_CODE_AD);
                 break;
             case R.id.signout:
 
@@ -208,5 +220,17 @@ public class NavigationActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mIsResumed = false;
+        if (valueEventListener!=null) {
+            databaseReference.removeEventListener(valueEventListener);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        Toast.makeText(getApplicationContext(),"Ad may be take while until being visible",Toast.LENGTH_LONG).show();
     }
 }

@@ -1,6 +1,6 @@
 package net.medhatblog.olxclone;
 
-import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
@@ -268,7 +268,7 @@ public class SellYourItemActivity extends AppCompatActivity {
     public void submitToFirebase(){
         if(!validate()){
 
-            Toast.makeText(getApplicationContext(),"Please check the inputs again",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please check the inputs again",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -290,14 +290,14 @@ public class SellYourItemActivity extends AppCompatActivity {
 
 
 
-            final ProgressDialog progressDialog = new ProgressDialog(this);
 
-            progressDialog.setTitle("Uploading images");
+
+
 
 
             for (int i = 0; i < imagesList.size(); i++) {
 
-                progressDialog.show();
+
 
 
                 UUID imageId = UUID.randomUUID();
@@ -315,16 +315,13 @@ public class SellYourItemActivity extends AppCompatActivity {
                                                      databaseReference.child(uid).child(String.valueOf(adId)).child("images").push().setValue(downloadUrl);
 
 
-                                                     progressDialog.dismiss();
+
 
                                                  }
                                              }
                         ).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        //if the upload is not successfull
-                        //hiding the progress dialog
-                        progressDialog.dismiss();
 
                         //and displaying error message
                         Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
@@ -349,9 +346,8 @@ public class SellYourItemActivity extends AppCompatActivity {
         );
         databaseReference.child(uid).child(String.valueOf(adId)).setValue(adUploadInfo);
 
-
-        Toast.makeText(getApplicationContext(),"Ad submitted successfully",Toast.LENGTH_LONG).show();
-        startActivity(new Intent(this,NavigationActivity.class));
+        setResult(RESULT_OK);
+        finish();
 
     }
 

@@ -70,25 +70,25 @@ public class MyAdsFragment extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
 
         // Setting up message in Progress dialog.
-        progressDialog.setMessage("Loading Images From Firebase.");
+        progressDialog.setMessage("Loading ADs From Server.");
 
         // Showing progress dialog.
         progressDialog.show();
-
-        databaseReference = FirebaseDatabase.getInstance().getReference(user.getUid());
-
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
+        if (user!=null) {
+            databaseReference = FirebaseDatabase.getInstance().getReference(user.getUid());
 
 
-                    for(DataSnapshot child2:snapshot.getChildren()){
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
 
-                        AdUploadInfo adUploadInfo= child2.getValue(AdUploadInfo.class);
+
+                    for (DataSnapshot child2 : snapshot.getChildren()) {
+
+                        AdUploadInfo adUploadInfo = child2.getValue(AdUploadInfo.class);
 
 
-                        for(DataSnapshot child3:child2.child("images").getChildren()) {
+                        for (DataSnapshot child3 : child2.child("images").getChildren()) {
 
                             adUploadInfo.setImageUrl(child3.getValue().toString());
                             adUploadInfo.setUserId(user.getUid());
@@ -100,28 +100,27 @@ public class MyAdsFragment extends Fragment {
                         }
 
 
+                    }
 
+                    adapter = new RecyclerViewAdapter(getActivity(), list);
+
+                    recyclerView.setAdapter(adapter);
+                    progressDialog.dismiss();
                 }
 
-                adapter = new RecyclerViewAdapter(getActivity(), list);
 
-                recyclerView.setAdapter(adapter);
-                progressDialog.dismiss();
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
+                    // Hiding the progress dialog.
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    progressDialog.dismiss();
 
-                // Hiding the progress dialog.
-
-                progressDialog.dismiss();
-
-            }
-        });
+                }
+            });
 
 
-
+        }
         return view;    }
 
 }

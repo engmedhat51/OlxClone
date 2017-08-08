@@ -213,6 +213,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(LoginActivity.this,"Connection Failed", Toast.LENGTH_SHORT).show();
 
     }
     @Override
@@ -236,13 +237,6 @@ public class LoginActivity extends AppCompatActivity implements
             startActivity(intent);
 
             finish();
-        } else {
-            // Signed out, show unauthenticated UI.
-
-            Toast.makeText(LoginActivity.this,
-                    "Something went wrong, Please check internet connection and try again", Toast.LENGTH_SHORT).show();
-
-
         }
     }
 
@@ -254,20 +248,14 @@ public class LoginActivity extends AppCompatActivity implements
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                        if (!task.isSuccessful()) {
 
-//                            FirebaseUser user = auth.getCurrentUser();
 
-                        } else {
-                            // If sign in fails, display a message to the user.
 
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-
                         }
 
-                        // ...
                     }
                 });
     }
