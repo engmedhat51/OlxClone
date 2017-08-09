@@ -123,11 +123,10 @@ public class SellYourItemActivity extends AppCompatActivity {
         params.setButtonTextColor(selectedColor);
         intent.putExtra(Constants.KEY_PARAMS, params);
 
-        if (selectedIdsBackup!=null){
-            if (!selectedIdsBackup.isEmpty()) {
+        if ((selectedIdsBackup!=null)&&!selectedIdsBackup.isEmpty()) {
+
                 intent.putExtra("selectedIdBack", selectedIdsBackup);
             }
-        }
 
         startActivityForResult(intent, Constants.TYPE_MULTI_PICKER);
     }

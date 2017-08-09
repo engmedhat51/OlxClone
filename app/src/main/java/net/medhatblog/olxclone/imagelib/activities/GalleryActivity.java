@@ -3,7 +3,6 @@ package net.medhatblog.olxclone.imagelib.activities;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -47,7 +46,7 @@ public class GalleryActivity extends BaseActivity {
     AlertDialog alertDialog;
     GalleryImagesAdapter imageAdapter;
     ArrayList<Image> imagesList = new ArrayList<>();
-    ArrayList<Image> imagesListr = new ArrayList<>();
+    ArrayList<Long> handlesForCamera=new ArrayList<>();
     private Params params;
 
 
@@ -59,15 +58,18 @@ public class GalleryActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar_title = (TextView) findViewById(R.id.toolbar_title);
         recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
-        init();
-        checkForPermissions();
 
-        Intent intent = getIntent();
-        imagesListr = intent.getParcelableArrayListExtra(Constants.KEY_BUNDLE_LIST);
 
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
+        checkForPermissions();
+
+    }
     private void init(){
         Utils.initToolBar(this, toolbar, true);
         toolbar_title.setText(R.string.select_images);
@@ -138,7 +140,8 @@ public class GalleryActivity extends BaseActivity {
                 alertDialog.dismiss();
             }
         }
-
+        handlesForCamera=imageAdapter.getSelectedIDs();
+        imagesList=null;
     }
 
     @Override
@@ -358,10 +361,15 @@ public class GalleryActivity extends BaseActivity {
             else
                 Utils.showLongSnack(parentLayout, error);
 
-            Intent intent = getIntent();
-            ArrayList<Long> handles = (ArrayList<Long>) intent.getSerializableExtra("selectedIdBack");
-            imageAdapter.enableSelection(handles);
-            setCountOnToolbar();
+
+                Intent intent = getIntent();
+                ArrayList<Long> handles = (ArrayList<Long>) intent.getSerializableExtra("selectedIdBack");
+                imageAdapter.enableSelection(handles);
+                setCountOnToolbar();
+            if (handlesForCamera!=null&&!handlesForCamera.isEmpty()) {
+                imageAdapter.enableSelection(handlesForCamera);
+                setCountOnToolbar();
+            }
         }
     }
 
@@ -376,9 +384,10 @@ public class GalleryActivity extends BaseActivity {
         switch (requestCode) {
             case Constants.CAMERA_INTENT:
 
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+
+
+
                 break;
         }
     }
@@ -400,7 +409,6 @@ public class GalleryActivity extends BaseActivity {
 
 
     }
-
 
 
 
