@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,7 +53,10 @@ public class ViewAdDetails extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference(adUploadInfo.getUserId()).child(adUploadInfo.getAdId());
 
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         title = (TextView) findViewById(R.id.title);
         price = (TextView) findViewById(R.id.price);
@@ -93,13 +97,15 @@ public class ViewAdDetails extends AppCompatActivity {
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
-                View v = layout.getChildAt(i+1);
+                View v = layout.getChildAt(i);
                     i=i+1;
                 if (v instanceof ImageView) {
                     Picasso.with(getApplicationContext())
                             .load(postSnapshot.getValue().toString())
-                            .placeholder(R.drawable.image_processing).resize(3000,3000)
-                            .onlyScaleDown()
+                            .placeholder(R.drawable.image_processing)
+                            .error(R.drawable.no_image)
+                            .fit()
+                            .centerInside()
                             .into((ImageView) v);
                     v.setVisibility(View.VISIBLE);
                 }
@@ -138,5 +144,42 @@ public class ViewAdDetails extends AppCompatActivity {
             }
         });
 
+    }
+    public void imageClick(View v){
+
+        String IdAsString = v.getResources().getResourceName(v.getId());
+        final String idNumber=IdAsString.substring(IdAsString.length()-1);
+
+        databaseReference.child("images").addValueEventListener(new ValueEventListener() {
+            int i =0;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    i=i+1;
+                    if (i== Integer.valueOf(idNumber)){
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(postSnapshot.getValue().toString()), "image/*");
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                        }
+                        break;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

@@ -161,8 +161,9 @@ public class SellYourItemActivity extends AppCompatActivity {
                 View v = layout.getChildAt(i+1);
                 if (v instanceof ImageView){
                     Picasso.with(getApplicationContext())
-                            .load(imagesList.get(i).uri).resize(100, 100)
-                            .onlyScaleDown()
+                            .load(imagesList.get(i).uri)
+                            .placeholder(R.drawable.image_processing)
+                            .error(R.drawable.no_image).fit()
                             .centerInside()
                             .into((ImageView) v);
 
