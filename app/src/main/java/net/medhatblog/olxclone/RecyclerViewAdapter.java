@@ -46,7 +46,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.priceView.setText(UploadInfo.adPrice+" EGP");
         holder.imageNameTextView.setText(UploadInfo.adTitle);
-        Picasso.with(context).load(UploadInfo.getImageUrl()).into(holder.imageView);
+        Picasso.with(context).load(UploadInfo.getImageUrl()).placeholder(R.drawable.image_processing)
+                .error(R.drawable.no_image).fit().centerInside().into(holder.imageView);
     }
 
     @Override

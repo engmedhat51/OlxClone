@@ -60,6 +60,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/MultimagerTheme.NoActionBar"/>
         <activity android:name=".ViewAdDetails"
+                  android:label="@string/ad_details"
                   android:theme="@style/AppTheme.Dark">
         </activity>
     </application>
