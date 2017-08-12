@@ -40,7 +40,7 @@ public class NavigationActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseUser user;
     private boolean mIsResumed = false;
-
+    private int selectedId= 0;
     public static final int REQUEST_CODE_AD = 0;
     private ProgressBar mProgressBar;
     ValueEventListener valueEventListener;
@@ -125,6 +125,7 @@ public class NavigationActivity extends AppCompatActivity {
         switch(menuItem.getItemId()) {
 
             case R.id.nav_home_fragment:
+                selectedId=0;
                 getSupportFragmentManager().beginTransaction().
                         remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
 
@@ -138,7 +139,7 @@ public class NavigationActivity extends AppCompatActivity {
 
                 break;
             case R.id.nav_my_ads_fragment:
-
+                selectedId=1;
                 getSupportFragmentManager().beginTransaction().
                         remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
 
@@ -254,6 +255,8 @@ public class NavigationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) {
+            MenuItem menuIem = nvDrawer.getMenu().getItem(selectedId);
+            selectDrawerItem(menuIem);
             return;
         }
             MenuItem menuIem = nvDrawer.getMenu().getItem(1);
