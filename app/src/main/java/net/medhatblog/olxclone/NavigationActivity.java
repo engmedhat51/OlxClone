@@ -12,7 +12,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -37,19 +41,29 @@ public class NavigationActivity extends AppCompatActivity {
     private FirebaseUser user;
     private boolean mIsResumed = false;
     private int selectedposition= 0;
-    private static final int REQUEST_CODE_AD = 0;
+    public static final int REQUEST_CODE_AD = 0;
+    private ProgressBar mProgressBar;
     ValueEventListener valueEventListener;
+    ValueEventListener homeValueEventListener;
+    FirebaseAuth firebaseAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
+    TextView welcome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        // Find our drawer view
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        welcome= (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.welcome);
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
+         firebaseAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                  user = firebaseAuth.getCurrentUser();
-
+                if (user!=null){
+                welcome.setText(getResources().getText(R.string.welcome)+ " " + user.getEmail());
+                }
             }
         };
         firebaseAuth.addAuthStateListener(mAuthListener);
@@ -64,8 +78,7 @@ public class NavigationActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        // Find our drawer view
-        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+
         // Setup drawer view
         setupDrawerContent(nvDrawer);
         toggle = new ActionBarDrawerToggle(
@@ -78,7 +91,7 @@ public class NavigationActivity extends AppCompatActivity {
         toggle.syncState();
         MenuItem menuIem= nvDrawer.getMenu().getItem(0);
         selectDrawerItem(menuIem);
-
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -94,16 +107,15 @@ public class NavigationActivity extends AppCompatActivity {
 
     public void selectDrawerItem(MenuItem menuItem) {
 
-        FragmentManager fm;
-        Fragment fragment;
+
 
         switch(menuItem.getItemId()) {
 
             case R.id.nav_home_fragment:
 
                 selectedposition= 0;
-                fm = getSupportFragmentManager();
-                fragment = new DisplayImagesFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Fragment fragment = new DisplayImagesFragment();
 
 
                 fm.beginTransaction()
@@ -131,7 +143,7 @@ public class NavigationActivity extends AppCompatActivity {
                                         .commit();
 
                             } else if (mIsResumed) {
-
+                                mProgressBar.setVisibility(View.GONE);
                                 Fragment fragment3 = new NoAdFragment();
 
                                 FragmentManager fm3 = getSupportFragmentManager();
@@ -212,6 +224,7 @@ public class NavigationActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         mIsResumed = true;
+        mProgressBar.setVisibility(View.VISIBLE);
 //            MenuItem menuIem = nvDrawer.getMenu().getItem(selectedposition);
 //            selectDrawerItem(menuIem);
     }
@@ -230,8 +243,8 @@ public class NavigationActivity extends AppCompatActivity {
         if (resultCode != RESULT_OK) {
             return;
         }
-        MenuItem menuIem= nvDrawer.getMenu().getItem(1);
-        selectDrawerItem(menuIem);
-        Toast.makeText(getApplicationContext(),"Ad may be take while until being visible",Toast.LENGTH_LONG).show();
+            MenuItem menuIem = nvDrawer.getMenu().getItem(1);
+            selectDrawerItem(menuIem);
+            Toast.makeText(getApplicationContext(), "Ad may be take while until being visible", Toast.LENGTH_LONG).show();
     }
 }

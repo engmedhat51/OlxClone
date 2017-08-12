@@ -1,8 +1,10 @@
 package net.medhatblog.olxclone;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -121,7 +124,13 @@ public class ViewAdDetails extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new AlertDialog.Builder(ViewAdDetails.this)
+                        .setTitle(getResources().getString(R.string.delete))
+                        .setMessage(getResources().getString(R.string.delete_confirmation))
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
+                            public void onClick(DialogInterface dialog, int whichButton) {
                 databaseReference.child("images").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -140,9 +149,11 @@ public class ViewAdDetails extends AppCompatActivity {
                 });
 
                 databaseReference.removeValue();
+                                Toast.makeText(getApplicationContext(), "Ad may be take while until being deleted", Toast.LENGTH_LONG).show();
                 finish();
             }
-        });
+        })      .setNegativeButton(android.R.string.no, null).show();
+            }});
 
     }
     public void imageClick(View v){

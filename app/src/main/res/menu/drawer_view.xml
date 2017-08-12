@@ -5,23 +5,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home_fragment"
-            android:icon="@drawable/ic_one"
+            android:icon="@drawable/ic_home_black_48dp"
             android:title="@string/home"
             android:checked="true"
             />
         <item
             android:id="@+id/nav_my_ads_fragment"
-            android:icon="@drawable/ic_two"
+            android:icon="@drawable/ic_perm_identity_black_48dp"
             android:title="@string/my_ads" />
 
         <item
             android:id="@+id/nav_favorites_fragment"
-
+            android:icon="@drawable/ic_favorite_border_black_48dp"
             android:title="@string/favorites" />
 
         <item
             android:id="@+id/nav_sell_your_item_fragment"
-
+            android:icon="@drawable/ic_queue_black_48dp"
             android:title="@string/sell_your_item" />
 
     </group>

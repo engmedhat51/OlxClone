@@ -38,6 +38,7 @@ public class DisplayImagesFragment extends Fragment {
     List<AdUploadInfo> list = new ArrayList<>();
 
     ValueEventListener listener;
+    ValueEventListener listener2;
     private FirebaseUser user;
     public DisplayImagesFragment() {
     }
@@ -131,12 +132,12 @@ public class DisplayImagesFragment extends Fragment {
                 int firstVisibleItemPosition= linearLayoutManager.findFirstVisibleItemPosition();
 
                 if (((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0))/*&&(firstVisibleItemPosition+1 % 5 == 0))*/ {
-                    Log.d("mmm","welcome to scroll");
+
                     queryOffset = queryOffset + 5;
                     final int alreadyLoaded =queryOffset-5;
 
 
-                    databaseReference.addValueEventListener(new ValueEventListener() {
+                    listener2=new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
                             int x=0;
@@ -186,7 +187,8 @@ public class DisplayImagesFragment extends Fragment {
 
 
                         }
-                    });
+                    };
+                    databaseReference.addValueEventListener(listener2);
                 }
 
 
@@ -200,6 +202,9 @@ public class DisplayImagesFragment extends Fragment {
         super.onPause();
         if (listener!=null){
             databaseReference.removeEventListener(listener);
+        }
+        if (listener2!=null){
+            databaseReference.removeEventListener(listener2);
         }
     }
 }

@@ -33,8 +33,8 @@ public class MyAdsFragment extends Fragment {
 
     // Creating RecyclerView.Adapter.
     RecyclerView.Adapter adapter ;
-
-
+    ValueEventListener valueEventListener;
+    ValueEventListener valueEventListener2;
 
 
     // Creating List of ImageUploadInfo class.
@@ -71,7 +71,7 @@ public class MyAdsFragment extends Fragment {
             databaseReference = FirebaseDatabase.getInstance().getReference(user.getUid());
 
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
+             valueEventListener=new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
 
@@ -112,9 +112,9 @@ public class MyAdsFragment extends Fragment {
 
 
                 }
-            });
+            };
 
-
+            databaseReference.addValueEventListener(valueEventListener);
         }
 
 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
@@ -137,7 +137,7 @@ recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
             final int alreadyLoaded =queryOffset-5;
 
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
+             valueEventListener2=new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
 
@@ -180,8 +180,9 @@ recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
 
 
                 }
-            });
-        }
+            };
+                    databaseReference.addValueEventListener(valueEventListener2);
+                }
 
 
 
@@ -190,4 +191,14 @@ recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         });
         return view;    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (valueEventListener!=null){
+            databaseReference.removeEventListener(valueEventListener);
+        }
+        if (valueEventListener2!=null){
+            databaseReference.removeEventListener(valueEventListener2);
+        }
+    }
 }
