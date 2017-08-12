@@ -168,9 +168,7 @@ public class NavigationActivity extends AppCompatActivity {
                 break;
 
 
-            case R.id.nav_favorites_fragment:
-                selectedposition= 2;
-                break;
+
             case R.id.nav_sell_your_item_fragment:
 
                 startActivityForResult(new Intent(NavigationActivity.this, SellYourItemActivity.class),REQUEST_CODE_AD);

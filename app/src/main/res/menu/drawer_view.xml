@@ -14,10 +14,7 @@
             android:icon="@drawable/ic_perm_identity_black_48dp"
             android:title="@string/my_ads" />
 
-        <item
-            android:id="@+id/nav_favorites_fragment"
-            android:icon="@drawable/ic_favorite_border_black_48dp"
-            android:title="@string/favorites" />
+        
 
         <item
             android:id="@+id/nav_sell_your_item_fragment"
