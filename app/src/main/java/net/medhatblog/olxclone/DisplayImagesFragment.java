@@ -1,10 +1,11 @@
 package net.medhatblog.olxclone;
 
-import android.app.ProgressDialog;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +31,12 @@ public class DisplayImagesFragment extends Fragment {
     // Creating RecyclerView.Adapter.
     RecyclerView.Adapter adapter ;
 
-    // Creating Progress dialog
+
 
 
     // Creating List of ImageUploadInfo class.
     List<AdUploadInfo> list = new ArrayList<>();
-    ProgressDialog progressDialog;
+
     ValueEventListener listener;
     private FirebaseUser user;
     public DisplayImagesFragment() {
@@ -55,17 +56,10 @@ public class DisplayImagesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         // Setting RecyclerView layout as LinearLayout.
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final LinearLayoutManager linearLayoutManager =new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        // Assign activity this to progress dialog.
 
-        progressDialog = new ProgressDialog(getActivity());
-
-        // Setting up message in Progress dialog.
-        progressDialog.setMessage("Loading ADs From Server.");
-
-        // Showing progress dialog.
-        progressDialog.show();
 
             databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -74,6 +68,7 @@ public class DisplayImagesFragment extends Fragment {
 
 
          listener = new ValueEventListener() {
+
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (user != null) {
@@ -93,7 +88,11 @@ public class DisplayImagesFragment extends Fragment {
                                     adUploadInfo.setImageUrl(child3.getValue().toString());
                                     adUploadInfo.setUserId(postSnapshot.getKey());
                                     adUploadInfo.setAdId(child2.getKey());
-                                    list.add(adUploadInfo);
+                                    if (list.size()==5){
+                                        break;
+                                    }
+
+                                        list.add(adUploadInfo);
 
                                     break;
                                 }
@@ -105,21 +104,95 @@ public class DisplayImagesFragment extends Fragment {
                         adapter = new RecyclerViewAdapter(getActivity(), list);
 
                         recyclerView.setAdapter(adapter);
-                        progressDialog.dismiss();
+
                     }
 
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
-                    // Hiding the progress dialog.
 
-                    progressDialog.dismiss();
+
+
 
                 }
             };
         databaseReference.addValueEventListener(listener);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            int queryOffset=5;
+            @Override
+            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
 
+                super.onScrolled(recyclerView, dx, dy);
+
+                int visibleItemCount        = linearLayoutManager.getChildCount();
+                int totalItemCount          = linearLayoutManager.getItemCount();
+                int firstVisibleItemPosition= linearLayoutManager.findFirstVisibleItemPosition();
+
+                if (((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0))/*&&(firstVisibleItemPosition+1 % 5 == 0))*/ {
+                    Log.d("mmm","welcome to scroll");
+                    queryOffset = queryOffset + 5;
+                    final int alreadyLoaded =queryOffset-5;
+
+
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            int x=0;
+                                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+
+
+                                    if (postSnapshot.getKey().equals(user.getUid())) {
+                                        continue;
+                                    }
+                                    for (DataSnapshot child2 : postSnapshot.getChildren()) {
+
+                                        x=x+1;
+                                        if (x<=alreadyLoaded){
+                                            continue;
+                                        }
+                                        AdUploadInfo adUploadInfo = child2.getValue(AdUploadInfo.class);
+
+
+                                        for (DataSnapshot child3 : child2.child("images").getChildren()) {
+
+                                            adUploadInfo.setImageUrl(child3.getValue().toString());
+                                            adUploadInfo.setUserId(postSnapshot.getKey());
+                                            adUploadInfo.setAdId(child2.getKey());
+                                            if (list.size()==queryOffset){
+                                                break;
+                                            }
+
+                                            list.add(adUploadInfo);
+
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+
+                            recyclerView.getAdapter().notifyItemRangeInserted(list.size(),5);
+
+
+
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+
+
+
+
+                        }
+                    });
+                }
+
+
+            }
+
+        });
            return view;    }
 
     @Override

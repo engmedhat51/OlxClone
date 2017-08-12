@@ -22,7 +22,15 @@
         <FrameLayout
             android:id="@+id/flContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center|top"
+                android:layout_marginTop="8dp"
+                />
+        </FrameLayout>
     </LinearLayout>
 
     <!-- The navigation drawer that comes from the left -->

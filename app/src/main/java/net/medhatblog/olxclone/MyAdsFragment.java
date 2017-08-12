@@ -3,10 +3,10 @@ package net.medhatblog.olxclone;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.app.ProgressDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,12 +34,12 @@ public class MyAdsFragment extends Fragment {
     // Creating RecyclerView.Adapter.
     RecyclerView.Adapter adapter ;
 
-    // Creating Progress dialog
+
 
 
     // Creating List of ImageUploadInfo class.
     List<AdUploadInfo>list = new ArrayList<>();
-    ProgressDialog progressDialog;
+
     private FirebaseUser user;
 
 
@@ -63,17 +63,10 @@ public class MyAdsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         // Setting RecyclerView layout as LinearLayout.
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final LinearLayoutManager linearLayoutManager =new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        // Assign activity this to progress dialog.
 
-        progressDialog = new ProgressDialog(getActivity());
-
-        // Setting up message in Progress dialog.
-        progressDialog.setMessage("Loading ADs From Server.");
-
-        // Showing progress dialog.
-        progressDialog.show();
         if (user!=null) {
             databaseReference = FirebaseDatabase.getInstance().getReference(user.getUid());
 
@@ -93,7 +86,9 @@ public class MyAdsFragment extends Fragment {
                             adUploadInfo.setImageUrl(child3.getValue().toString());
                             adUploadInfo.setUserId(user.getUid());
                             adUploadInfo.setAdId(child2.getKey());
-
+                            if (list.size()==5){
+                                break;
+                            }
                             list.add(adUploadInfo);
 
                             break;
@@ -105,22 +100,94 @@ public class MyAdsFragment extends Fragment {
                     adapter = new RecyclerViewAdapter(getActivity(), list);
 
                     recyclerView.setAdapter(adapter);
-                    progressDialog.dismiss();
+
                 }
 
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
-                    // Hiding the progress dialog.
 
-                    progressDialog.dismiss();
+
+
 
                 }
             });
 
 
         }
+
+recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            int queryOffset=5;
+            @Override
+            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+
+                super.onScrolled(recyclerView, dx, dy);
+
+
+                int visibleItemCount        = linearLayoutManager.getChildCount();
+                 int totalItemCount          = linearLayoutManager.getItemCount();
+                int firstVisibleItemPosition= linearLayoutManager.findFirstVisibleItemPosition();
+
+
+                if (((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0))/*&&(firstVisibleItemPosition+1 % 5 == 0))*/ {
+
+                    queryOffset = queryOffset + 5;
+            final int alreadyLoaded =queryOffset-5;
+
+
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+
+                    int x=0;
+                    for (DataSnapshot child2 : snapshot.getChildren()) {
+                    x=x+1;
+                    if (x<=alreadyLoaded){
+                    continue;
+                            }
+                        AdUploadInfo adUploadInfo = child2.getValue(AdUploadInfo.class);
+
+
+                        for (DataSnapshot child3 : child2.child("images").getChildren()) {
+
+                            adUploadInfo.setImageUrl(child3.getValue().toString());
+                            adUploadInfo.setUserId(user.getUid());
+                            adUploadInfo.setAdId(child2.getKey());
+                            if (list.size()==queryOffset){
+                                break;
+                            }
+                            list.add(adUploadInfo);
+                            Log.d("mmm","list size is "+list.size());
+                            break;
+                        }
+
+
+                    }
+
+
+                            recyclerView.getAdapter().notifyItemRangeInserted(list.size(),5);
+
+
+                }
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+
+
+
+                }
+            });
+        }
+
+
+
+    }
+
+        });
         return view;    }
 
 }

@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class NavigationActivity extends AppCompatActivity {
-
+// TODO connect the app to firebase
     private GoogleApiClient mGoogleApiClient;
 
     private DrawerLayout mDrawer;
@@ -76,8 +76,8 @@ public class NavigationActivity extends AppCompatActivity {
                 R.string.nav_close_drawer);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
-//        MenuItem menuIem= nvDrawer.getMenu().getItem(0);
-//        selectDrawerItem(menuIem);
+        MenuItem menuIem= nvDrawer.getMenu().getItem(0);
+        selectDrawerItem(menuIem);
 
     }
 
@@ -96,15 +96,15 @@ public class NavigationActivity extends AppCompatActivity {
 
         FragmentManager fm;
         Fragment fragment;
+
         switch(menuItem.getItemId()) {
 
             case R.id.nav_home_fragment:
 
                 selectedposition= 0;
-
+                fm = getSupportFragmentManager();
                 fragment = new DisplayImagesFragment();
 
-                fm = getSupportFragmentManager();
 
                 fm.beginTransaction()
                         .replace(R.id.flContent, fragment)
@@ -113,7 +113,6 @@ public class NavigationActivity extends AppCompatActivity {
                 break;
             case R.id.nav_my_ads_fragment:
                 selectedposition= 1;
-
 
 
                 if (user!=null) {
@@ -213,8 +212,8 @@ public class NavigationActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         mIsResumed = true;
-            MenuItem menuIem = nvDrawer.getMenu().getItem(selectedposition);
-            selectDrawerItem(menuIem);
+//            MenuItem menuIem = nvDrawer.getMenu().getItem(selectedposition);
+//            selectDrawerItem(menuIem);
     }
     @Override
     protected void onPause() {
@@ -231,6 +230,8 @@ public class NavigationActivity extends AppCompatActivity {
         if (resultCode != RESULT_OK) {
             return;
         }
+        MenuItem menuIem= nvDrawer.getMenu().getItem(1);
+        selectDrawerItem(menuIem);
         Toast.makeText(getApplicationContext(),"Ad may be take while until being visible",Toast.LENGTH_LONG).show();
     }
 }
