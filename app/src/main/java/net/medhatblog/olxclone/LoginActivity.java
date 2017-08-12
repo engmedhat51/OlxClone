@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements
 
             Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
             startActivity(intent);
-
+            finish();
         }
     }
 

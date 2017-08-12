@@ -1,7 +1,9 @@
 package net.medhatblog.olxclone;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -62,7 +64,7 @@ public class SellYourItemActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private FirebaseUser user;
-
+    SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,17 +89,6 @@ public class SellYourItemActivity extends AppCompatActivity {
                 submitToFirebase();
             }
         });
-        if (user != null) {
-
-            String userName = user.getDisplayName();
-            String userEmail = user.getEmail();
-
-            uid = user.getUid();
-            name.setText(userName);
-            input_email.setText(userEmail);
-
-
-        }
         layout = (LinearLayout)findViewById(R.id.layout);
         imageView = (ImageView) findViewById(R.id.image1);
         selectedColor = fetchAccentColor();
@@ -111,6 +102,25 @@ public class SellYourItemActivity extends AppCompatActivity {
                 initiateMultiPicker();
             }
         });
+
+        mSettings = this.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        String username = mSettings.getString("name","");
+        String email = mSettings.getString("email","");
+        String mobileNumber = mSettings.getString("mobile","");
+        name.setText(username);
+        input_email.setText(email);
+        mobile_number.setText(mobileNumber);
+        if (user != null) {
+            String userEmail = user.getEmail();
+
+            uid = user.getUid();
+            if (input_email.getText().toString().isEmpty()) {
+                input_email.setText(userEmail);
+            }
+
+        }
+
+
     }
     private void initiateMultiPicker() {
         Intent intent = new Intent(this, GalleryActivity.class);
@@ -273,6 +283,9 @@ public class SellYourItemActivity extends AppCompatActivity {
         }
 
 
+        mSettings.edit().putString("name",name.getText().toString()).apply();
+        mSettings.edit().putString("email",input_email.getText().toString()).apply();
+        mSettings.edit().putString("mobile",mobile_number.getText().toString()).apply();
         // Generate a reference to a new location and add some data using push()
         DatabaseReference pushedPostRef = databaseReference.push();
 
