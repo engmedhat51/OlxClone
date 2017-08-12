@@ -140,7 +140,9 @@ public class GalleryActivity extends BaseActivity {
                 alertDialog.dismiss();
             }
         }
-        handlesForCamera=imageAdapter.getSelectedIDs();
+        if (imageAdapter!=null) {
+            handlesForCamera = imageAdapter.getSelectedIDs();
+        }
         imagesList=null;
     }
 

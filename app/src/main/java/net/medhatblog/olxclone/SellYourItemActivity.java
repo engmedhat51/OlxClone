@@ -103,7 +103,7 @@ public class SellYourItemActivity extends AppCompatActivity {
             }
         });
 
-        mSettings = this.getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        mSettings = this.getSharedPreferences(user.getUid(), Context.MODE_PRIVATE);
         String username = mSettings.getString("name","");
         String email = mSettings.getString("email","");
         String mobileNumber = mSettings.getString("mobile","");

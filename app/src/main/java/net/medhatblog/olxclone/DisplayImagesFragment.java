@@ -117,7 +117,7 @@ public class DisplayImagesFragment extends Fragment {
 
 
                 }
-            };
+         };
         databaseReference.addValueEventListener(listener);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {

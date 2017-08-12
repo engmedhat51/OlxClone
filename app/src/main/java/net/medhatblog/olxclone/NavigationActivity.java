@@ -40,11 +40,10 @@ public class NavigationActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseUser user;
     private boolean mIsResumed = false;
-    private int selectedposition= 0;
+
     public static final int REQUEST_CODE_AD = 0;
     private ProgressBar mProgressBar;
     ValueEventListener valueEventListener;
-    ValueEventListener homeValueEventListener;
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
     TextView welcome;
@@ -54,6 +53,7 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         // Find our drawer view
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         welcome= (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.welcome);
 
          firebaseAuth = FirebaseAuth.getInstance();
@@ -63,7 +63,20 @@ public class NavigationActivity extends AppCompatActivity {
                  user = firebaseAuth.getCurrentUser();
                 if (user!=null){
                 welcome.setText(getResources().getText(R.string.welcome)+ " " + user.getEmail());
+
+
+                    FragmentManager fm = getSupportFragmentManager();
+                    Fragment fragment = new DisplayImagesFragment();
+
+                    if( mIsResumed)
+                            {
+                                fm.beginTransaction()
+                            .replace(R.id.flContent,  fragment)
+                            .commit();
+
+                            }
                 }
+
             }
         };
         firebaseAuth.addAuthStateListener(mAuthListener);
@@ -76,7 +89,7 @@ public class NavigationActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
 
 
         // Setup drawer view
@@ -89,8 +102,8 @@ public class NavigationActivity extends AppCompatActivity {
                 R.string.nav_close_drawer);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
-        MenuItem menuIem= nvDrawer.getMenu().getItem(0);
-        selectDrawerItem(menuIem);
+//        MenuItem menuIem= nvDrawer.getMenu().getItem(0);
+//        selectDrawerItem(menuIem);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
@@ -112,8 +125,9 @@ public class NavigationActivity extends AppCompatActivity {
         switch(menuItem.getItemId()) {
 
             case R.id.nav_home_fragment:
+                getSupportFragmentManager().beginTransaction().
+                        remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
 
-                selectedposition= 0;
                 FragmentManager fm = getSupportFragmentManager();
                 Fragment fragment = new DisplayImagesFragment();
 
@@ -124,8 +138,9 @@ public class NavigationActivity extends AppCompatActivity {
 
                 break;
             case R.id.nav_my_ads_fragment:
-                selectedposition= 1;
 
+                getSupportFragmentManager().beginTransaction().
+                        remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
 
                 if (user!=null) {
                      valueEventListener=new ValueEventListener() {
