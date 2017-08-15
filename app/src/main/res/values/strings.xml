@@ -50,4 +50,6 @@
     <string name="delete">Delete</string>
     <string name="ad_details">Ad details</string>
     <string name="delete_confirmation">Are you sure to delete this Ad.</string>
+    <string name="please">Please Check internet Connection and try again</string>
+    <string name="reload">Reload</string>
 </resources>

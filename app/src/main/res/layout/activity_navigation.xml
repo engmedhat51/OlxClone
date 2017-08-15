@@ -5,7 +5,11 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
     <!-- This LinearLayout represents the contents of the screen  -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,8 +35,42 @@
                 android:layout_marginTop="8dp"
                 />
         </FrameLayout>
-    </LinearLayout>
 
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/internet_check"
+            android:visibility="invisible"
+            android:layout_centerInParent="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_perm_scan_wifi_white_48dp"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/please"
+                android:textSize="20sp"
+                android:gravity="center"
+                />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/reload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/reload"
+                android:background="@drawable/roundedcornersblue"
+                />
+
+        </LinearLayout>
+</RelativeLayout>
     <!-- The navigation drawer that comes from the left -->
     <!-- Note that `android:layout_gravity` needs to be set to 'start' -->
     <android.support.design.widget.NavigationView

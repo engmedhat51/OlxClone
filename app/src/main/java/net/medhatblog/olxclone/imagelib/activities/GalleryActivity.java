@@ -66,8 +66,8 @@ public class GalleryActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        init();
         checkForPermissions();
+        init();
 
     }
     private void init(){
@@ -182,7 +182,8 @@ public class GalleryActivity extends BaseActivity {
             return true;
         }
         else if(item.getItemId() == R.id.action_camera){
-            if(hasCameraPermission(this))
+            cameraIntent();
+          /*  if(hasCameraPermission(this))
 
             {
 
@@ -190,7 +191,7 @@ public class GalleryActivity extends BaseActivity {
             else {
                 requestCameraPermissions(this, Constants.REQUEST_CAMERA_PERMISSION);
 
-            }
+            }*/
         }
         return super.onOptionsItemSelected(item);
     }
@@ -396,16 +397,18 @@ public class GalleryActivity extends BaseActivity {
 
     public void cameraIntent(){
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent intent1 = new Intent();
+        intent1.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 
 
-
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
+        if (intent1.resolveActivity(getPackageManager()) != null) {
 
 
+        startActivity(intent1);
 
-            startActivityForResult(takePictureIntent,Constants.CAMERA_INTENT);
+//            startActivityForResult(takePictureIntent,Constants.CAMERA_INTENT);
 
         }
 

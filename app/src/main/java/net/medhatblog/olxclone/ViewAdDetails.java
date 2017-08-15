@@ -47,7 +47,13 @@ public class ViewAdDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_ad_details);
+        if(! Utility.isNetworkAvailable(this)){
 
+
+            Toast.makeText(this,
+                    "Please check internet connection", Toast.LENGTH_SHORT).show();
+
+        }
         Intent intent = getIntent();
 
         final AdUploadInfo adUploadInfo = (AdUploadInfo) intent.getSerializableExtra("AdDetails");
@@ -124,6 +130,13 @@ public class ViewAdDetails extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(! Utility.isNetworkAvailable(ViewAdDetails.this)){
+
+
+                    Toast.makeText(ViewAdDetails.this,
+                            "Please check internet connection", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new AlertDialog.Builder(ViewAdDetails.this)
                         .setTitle(getResources().getString(R.string.delete))
                         .setMessage(getResources().getString(R.string.delete_confirmation))

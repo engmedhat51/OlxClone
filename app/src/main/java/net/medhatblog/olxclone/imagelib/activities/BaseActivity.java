@@ -38,9 +38,17 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void dismissProgressDialog(){
+        try {
         if(progressDialog != null)
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
+        }catch (final IllegalArgumentException e) {
+            // Handle or log or ignore
+        } catch (final Exception e) {
+            // Handle or log or ignore
+        } finally {
+            progressDialog=null;
+        }
     }
 
     public boolean hasStoragePermission(Context context) {

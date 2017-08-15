@@ -119,7 +119,10 @@ public class SellYourItemActivity extends AppCompatActivity {
             }
 
         }
+        if(! Utility.isNetworkAvailable(this)){
 
+            Toast.makeText(this,
+                    "Please check internet connection", Toast.LENGTH_SHORT).show();}
 
     }
     private void initiateMultiPicker() {
@@ -280,6 +283,11 @@ public class SellYourItemActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(),"Please check the inputs again",Toast.LENGTH_SHORT).show();
             return;
+        }else if(! Utility.isNetworkAvailable(this)){
+
+            Toast.makeText(this,
+                    "Please check internet connection and try again", Toast.LENGTH_SHORT).show();
+        return;
         }
 
 

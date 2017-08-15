@@ -11,10 +11,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,8 @@ public class NavigationActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener mAuthListener;
     TextView welcome;
+    LinearLayout internetCheckLayout;
+    private AppCompatButton reload;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +59,9 @@ public class NavigationActivity extends AppCompatActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         welcome= (TextView) nvDrawer.getHeaderView(0).findViewById(R.id.welcome);
-
+        internetCheckLayout = (LinearLayout)findViewById(R.id.internet_check);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        reload = (AppCompatButton) findViewById(R.id.reload);
          firebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -64,6 +70,14 @@ public class NavigationActivity extends AppCompatActivity {
                 if (user!=null){
                 welcome.setText(getResources().getText(R.string.welcome)+ " " + user.getEmail());
 
+                    if(! Utility.isNetworkAvailable(NavigationActivity.this)){
+
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        internetCheckLayout.setVisibility(View.VISIBLE);
+                        Toast.makeText(NavigationActivity.this,
+                                "Please check internet connection", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     FragmentManager fm = getSupportFragmentManager();
                     Fragment fragment = new DisplayImagesFragment();
@@ -89,7 +103,13 @@ public class NavigationActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MenuItem menuIem = nvDrawer.getMenu().getItem(selectedId);
+                selectDrawerItem(menuIem);
+            }
+        });
 
 
         // Setup drawer view
@@ -104,7 +124,7 @@ public class NavigationActivity extends AppCompatActivity {
         toggle.syncState();
 //        MenuItem menuIem= nvDrawer.getMenu().getItem(0);
 //        selectDrawerItem(menuIem);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -126,8 +146,20 @@ public class NavigationActivity extends AppCompatActivity {
 
             case R.id.nav_home_fragment:
                 selectedId=0;
-                getSupportFragmentManager().beginTransaction().
-                        remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
+                if (getSupportFragmentManager().findFragmentById(R.id.flContent)!=null) {
+                    getSupportFragmentManager().beginTransaction().
+                            remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
+                }
+                if(! Utility.isNetworkAvailable(this)){
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    internetCheckLayout.setVisibility(View.VISIBLE);
+                    Toast.makeText(this,
+                            "Please check internet connection", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                mProgressBar.setVisibility(View.VISIBLE);
+                internetCheckLayout.setVisibility(View.INVISIBLE);
 
                 FragmentManager fm = getSupportFragmentManager();
                 Fragment fragment = new DisplayImagesFragment();
@@ -140,8 +172,21 @@ public class NavigationActivity extends AppCompatActivity {
                 break;
             case R.id.nav_my_ads_fragment:
                 selectedId=1;
-                getSupportFragmentManager().beginTransaction().
-                        remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
+                if (getSupportFragmentManager().findFragmentById(R.id.flContent)!=null) {
+                    getSupportFragmentManager().beginTransaction().
+                            remove(getSupportFragmentManager().findFragmentById(R.id.flContent)).commit();
+                }
+                if(! Utility.isNetworkAvailable(this)){
+
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    internetCheckLayout.setVisibility(View.VISIBLE);
+                    Toast.makeText(this,
+                            "Please check internet connection", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                mProgressBar.setVisibility(View.VISIBLE);
+                internetCheckLayout.setVisibility(View.INVISIBLE);
+
 
                 if (user!=null) {
                      valueEventListener=new ValueEventListener() {
@@ -238,7 +283,10 @@ public class NavigationActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         mIsResumed = true;
+        if(! Utility.isNetworkAvailable(this))
+        {
         mProgressBar.setVisibility(View.VISIBLE);
+        }
 //            MenuItem menuIem = nvDrawer.getMenu().getItem(selectedposition);
 //            selectDrawerItem(menuIem);
     }
