@@ -118,7 +118,7 @@ public class DisplayImagesFragment extends Fragment {
 
                 }
          };
-        databaseReference.addValueEventListener(listener);
+        databaseReference.addListenerForSingleValueEvent(listener);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             int queryOffset=5;
@@ -188,7 +188,7 @@ public class DisplayImagesFragment extends Fragment {
 
                         }
                     };
-                    databaseReference.addValueEventListener(listener2);
+                    databaseReference.addListenerForSingleValueEvent(listener2);
                 }
 
 

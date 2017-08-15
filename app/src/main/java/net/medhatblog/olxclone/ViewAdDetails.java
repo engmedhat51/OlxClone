@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -98,7 +101,7 @@ public class ViewAdDetails extends AppCompatActivity {
                 startActivity(dial);
             }
         });
-        databaseReference.child("images").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("images").addListenerForSingleValueEvent(new ValueEventListener() {
             int i =0;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -144,7 +147,7 @@ public class ViewAdDetails extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
-                databaseReference.child("images").addValueEventListener(new ValueEventListener() {
+                databaseReference.child("images").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -174,7 +177,7 @@ public class ViewAdDetails extends AppCompatActivity {
         String IdAsString = v.getResources().getResourceName(v.getId());
         final String idNumber=IdAsString.substring(IdAsString.length()-1);
 
-        databaseReference.child("images").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("images").addListenerForSingleValueEvent(new ValueEventListener() {
             int i =0;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -114,7 +114,7 @@ public class MyAdsFragment extends Fragment {
                 }
             };
 
-            databaseReference.addValueEventListener(valueEventListener);
+            databaseReference.addListenerForSingleValueEvent(valueEventListener);
         }
 
 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
@@ -159,7 +159,7 @@ recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
                                 break;
                             }
                             list.add(adUploadInfo);
-                            Log.d("mmm","list size is "+list.size());
+
                             break;
                         }
 
@@ -181,7 +181,7 @@ recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
 
                 }
             };
-                    databaseReference.addValueEventListener(valueEventListener2);
+                    databaseReference.addListenerForSingleValueEvent(valueEventListener2);
                 }
 
 

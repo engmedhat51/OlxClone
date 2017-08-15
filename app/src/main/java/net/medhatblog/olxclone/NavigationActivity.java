@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -165,9 +166,14 @@ public class NavigationActivity extends AppCompatActivity {
                 Fragment fragment = new DisplayImagesFragment();
 
 
-                fm.beginTransaction()
-                        .replace(R.id.flContent, fragment)
-                        .commit();
+
+
+                    FragmentTransaction f1=fm.beginTransaction()
+                            .replace(R.id.flContent, fragment);
+                if (selectedId==0) {
+
+                    f1.commit();
+                }
 
                 break;
             case R.id.nav_my_ads_fragment:
@@ -199,9 +205,14 @@ public class NavigationActivity extends AppCompatActivity {
                                 FragmentManager fm2 = getSupportFragmentManager();
 
 
-                                fm2.beginTransaction()
-                                        .replace(R.id.flContent, fragment2)
-                                        .commit();
+
+
+                                FragmentTransaction f3=fm2.beginTransaction()
+                                        .replace(R.id.flContent, fragment2);
+                                if (selectedId==1){
+                                    f3.commit();
+                                }
+
 
                             } else if (mIsResumed) {
                                 mProgressBar.setVisibility(View.GONE);
@@ -304,10 +315,12 @@ public class NavigationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) {
             MenuItem menuIem = nvDrawer.getMenu().getItem(selectedId);
-            selectDrawerItem(menuIem);
+//            selectDrawerItem(menuIem);
+            menuIem.setChecked(true);
+            setTitle(menuIem.getTitle());
             return;
         }
-            MenuItem menuIem = nvDrawer.getMenu().getItem(1);
+            MenuItem menuIem = nvDrawer.getMenu().getItem(0);
             selectDrawerItem(menuIem);
             Toast.makeText(getApplicationContext(), "Ad may be take while until being visible", Toast.LENGTH_LONG).show();
     }
